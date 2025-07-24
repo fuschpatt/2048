@@ -88,9 +88,17 @@
     function getBrowserZoomLevel() {
       return window.devicePixelRatio || 1;
     }
-  
-    function applyInverseZoom() {
-      const zoom = getBrowserZoomLevel();
+    // Écoute les messages de la page parente
+window.addEventListener("message", function(event) {
+  if (event.data.zoomLevel) {
+    const zoom = event.data.zoomLevel;
+    console.log("Zoom reçu depuis parent :", zoom);
+    applyInverseZoom(zoom); // On passe le zoom reçu
+  }
+});
+
+function applyInverseZoom(externalZoom) {
+      const zoom = externalZoom || getBrowserZoomLevel();
       const gameRoot = document.getElementById('game-root');
       if (gameRoot) {
         let scale = 1 / zoom;
